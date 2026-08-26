@@ -74,7 +74,8 @@ python -m cli.ingest --directory ~/your/book/barcodes/ --database-url postgresql
 Will look like this
 
 Once complete, you'll get a nice report of what happened.
-!(Example of the console report after an ingest run)[/example-images/ingest-summary.png]
+
+![Example of the console report after an ingest run](/example-images/ingest-summary.png)
 
 If you run the script again on the same directory, if the book has already been ingested it'll skip it and move onto the next one. 
 
