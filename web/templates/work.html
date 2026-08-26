@@ -1,0 +1,33 @@
+<!doctype html>
+<title>Leabharlann</title>
+    <link rel="stylesheet" href="/static/site.css">
+<body>
+<div class="hazard-stripe"></div>
+<header>
+    <h1><a href="/">Leabharlann</a></h1>
+</header>
+<main>
+    <h2>{{ work.title}}</h2>
+    <h3>By 
+        {% for author in work.authors%}
+        <a href="{{ url_for('author', author_name=author)}}">{{ author }}</a> {% if not loop.last %}, {% endif %}
+        {% endfor %}
+    </h3>
+    {% if work.primary_cover %}
+        <img src="{{ work.primary_cover }}" alt="Cover of {{ work.title }}" loading="lazy">
+    {% endif %}
+    <p>{{ work.description }}</p>
+    <h3>{{ work.editions | length  }} Edition{{'s' if (work.editions | length) > 1 }}</h3>
+    {% for edition in work.editions %}
+    <h3>{{ edition.physical_format if edition.physical_format and edition.physical_format != 'None' else 'Unknown Format'}} ({{ edition.publish_date | default('Unknown Year') }})</h3>
+    <p>ISBN: {{ edition.isbn13 }}</p>
+    {% if edition.quantity > 1 %}
+    <p><strong>Copies Owned:</strong> {{ edition.quantity }}</p>
+    {% endif %}
+        <details class="debug-data">
+            <summary>View Edition JSON</summary>
+            <pre><code>{{ edition.raw_response | tojson(indent=2) }}</code></pre>
+        </details>
+    {% endfor %}
+</main>
+</body>

@@ -1,0 +1,9 @@
+flask
+psycopg
+pyzbar
+pytesseract
+requests
+certifi
+truststore
+python-dotenv
+isbnlib
