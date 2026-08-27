@@ -9,15 +9,32 @@ env_path = BASE_DIR / ".env"
 
 load_dotenv(dotenv_path=env_path)
 
-def get_db_connection(db_url_override: str | None = None) -> psycopg.Connection: 
+def get_db_connection(db_url_override: str | None = None) -> psycopg.Connection:
+    """
+    Establish PostgreSQL connection with proper error handling.
+    
+    Args:
+        db_url_override: Override the DATABASE_URL if provided
+        
+    Returns:
+        Active database connection
+        
+    Raises:
+        RuntimeError: If no connection string is available
+        psycopg.Error: For database connection failures
+    """
     database_url = db_url_override or os.environ.get("DATABASE_URL")
-
+    
     if not database_url:
-        print("Error: DATABASE_URL doesn't seem to be set", file=sys.stderr)
-        print("Check the .env file in the root directory of the project or export it directly", file=sys.stderr)
-        sys.exit(1)
+        raise RuntimeError(
+            "Required environment variable 'DATABASE_URL' is missing. "
+            "Set it in your .env file at the project root."
+        )
+
     try:
+        import psycopg
         return psycopg.connect(database_url)
-    except psycopg.Error as e:
+    except Exception as e:
+        # Log the error but don't crash
         print(f"Database connection failed: {e}", file=sys.stderr)
-        sys.exit(1)
+        raise RuntimeError("Unable to connect to database") from e
